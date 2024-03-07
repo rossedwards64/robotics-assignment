@@ -1,0 +1,6 @@
+.pio
+.clang_complete
+.ccls
+.cache
+compile_commands.json
+
