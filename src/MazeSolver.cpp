@@ -3,7 +3,6 @@
 #pragma clang diagnostic ignored "-Wc++11-narrowing"
 #include <Zumo32U4.h>
 #include <stdint.h>
-#include <stdio.h>
 #pragma clang diagnostic pop
 
 
@@ -70,7 +69,6 @@ public:
             break;
         case SpinRight:
             set_speed(max_speed);
-            turn_speed = max_speed;
             for (uint16_t i = 0; i < 60; i++) { turn_right(); }
             break;
         }
