@@ -1,5 +1,4 @@
 #include "Move.hpp"
-#include <avr/common.h>
 
 Stack<Move::Direction, Move::max_moves_> Move::moves;
 
