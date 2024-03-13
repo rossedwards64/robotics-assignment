@@ -1,6 +1,7 @@
 #ifndef MOVE_HPP_
 #define MOVE_HPP_
 
+#include "Stack.hpp"
 #include "Zumo32U4Motors.h"
 #include "Zumo32U4IMU.h"
 #include <Arduino.h>
@@ -18,8 +19,6 @@ public:
         Right,
         Straight,
         Reverse,
-        SpinLeft,
-        SpinRight
     };
 
     constexpr Move(Direction direction, int16_t max_speed, uint32_t turn_angle)
@@ -42,6 +41,9 @@ public:
     auto do_move() -> Direction;
     auto do_move(uint16_t duration) -> Direction;
 
+    void go_back();
+    void retrace_steps();
+
     static void stop() { motors.setSpeeds(0, 0); }
     void reset_angle();
 
@@ -60,17 +62,20 @@ private:
     int32_t convert_angle();
     void turn_adjust();
 
+    static const uint16_t max_moves_{ 100 };
+    static Stack<Direction, max_moves_> moves;
+
     static int16_t gyro_offset_;
     static uint16_t gyro_last_update_;
 
-    static const int16_t move_time_ = 600;
-    static const int16_t turn_speed_ = 200;
+    static const int16_t move_time_{ 600 };
+    static const int16_t turn_speed_{ 200 };
 
     // Values obtained from Zumo MazeSolver example.
-    static const int32_t half_quarter_turn_ = 0x20000000;
-    static constexpr int32_t quarter_turn_ = half_quarter_turn_ * 2;
-    static constexpr int32_t degree_turn_ = (half_quarter_turn_ + 22) / 45;
-    static constexpr int64_t degrees_formula_ = 14680064 / 17578125;
+    static const int32_t half_quarter_turn_{ 0x20000000 };
+    static constexpr int32_t quarter_turn_{ half_quarter_turn_ * 2 };
+    static constexpr int32_t degree_turn_{ (half_quarter_turn_ + 22) / 45 };
+    static constexpr int64_t degrees_formula_{ 14680064 / 17578125 };
 
     Direction direction_;
     int16_t max_speed_;
