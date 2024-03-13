@@ -1,11 +1,14 @@
-#include "Move.hpp"
 #include <Wire.h>
+
+#include "MotorHandler.hpp"
 
 const uint16_t border_thresh{ 450 };
 const uint16_t prox_thresh{ 4 };
 
 Zumo32U4LCD display;
 Zumo32U4ButtonA button_a;
+
+MotorHandler motor;
 
 Zumo32U4ProximitySensors prox_sensors;
 
@@ -30,21 +33,18 @@ void calibrate_sensors()
     Wire.begin();
     prox_sensors.initThreeSensors();
     line_sensors.initThreeSensors();
-    Move::imu.init();
-    Move::imu.enableDefault();
-    Move::imu.configureForTurnSensing();
     for (uint16_t i{ 0 }; i < 120; i++) {
-        Move::Direction direction;
+        MotorHandler::Direction direction;
         if (i > 30 && i <= 90) {
-            direction = Move::Left;
+            direction = MotorHandler::Left;
         } else {
-            direction = Move::Right;
+            direction = MotorHandler::Right;
         }
-        Move(direction, 200).do_move(0);
+        MotorHandler(direction, 200).do_move(0);
 
         line_sensors.calibrate();
     }
-    Move::stop();
+    MotorHandler::stop();
     ledYellow(false);
 }
 
@@ -65,20 +65,19 @@ void introduction()
 void detect_border()
 {
     line_sensors.read(static_cast<uint16_t *>(line_sensor_vals));
-    Move::imu.readGyro();
 
     uint16_t left{ line_sensor_vals[0] };
     uint16_t middle{ line_sensor_vals[1] };
     uint16_t right{ line_sensor_vals[2] };
 
-    Move::Direction direction;
+    MotorHandler::Direction direction;
     if (middle >= border_thresh) {
-        direction = Move::Direction::Left;
+        direction = MotorHandler::Direction::Left;
     } else {
-        direction = Move::Direction::Straight;
+        direction = MotorHandler::Direction::Straight;
     }
 
-    Move(direction).do_move(300);
+    MotorHandler(direction).do_move(300);
 }
 
 void detect_object()
