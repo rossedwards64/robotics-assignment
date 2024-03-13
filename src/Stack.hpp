@@ -41,7 +41,7 @@ public:
 private:
     bool full() const { return size_ < (N - 1); }
 
-    T data_[N];
+    T data_[N]{};
     T *stack_ptr_{ nullptr };
     size_t size_{ 0 };
 };
