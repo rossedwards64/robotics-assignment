@@ -22,7 +22,6 @@ auto Move::do_move(uint16_t duration) -> Direction
 
     delay(duration);
     reset_angle();
-    moves.push(direction_);
     return direction_;
 }
 
