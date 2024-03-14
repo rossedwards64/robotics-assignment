@@ -1,11 +1,11 @@
 #ifndef GYRO_HANDLER_HPP_
 #define GYRO_HANDLER_HPP_
 
+#include "BorderDetectionHandler.hpp"
 #include <Arduino.h>
 #include <Wire.h>
 #include <stdint.h>
 #include <Zumo32U4IMU.h>
-
 
 /* initialisation routine, turn values and turn adjustment routine obtained from
  * the Zumo MazeSolver example.
@@ -26,7 +26,11 @@ public:
     static constexpr int32_t angle_1_degree_{ (angle_45_degrees_ + 22) / 45 };
 
     void calibrate();
-    void turn();
+    void calibrate_turn(BorderDetectionHandler &border_detector,
+                        bool reverse = false, bool centre = false);
+    void turn_right();
+    void turn_left();
+    void recenter();
     void reset_angle();
 
     static int64_t gyro_digits_to_degrees(uint32_t gyro_digits)

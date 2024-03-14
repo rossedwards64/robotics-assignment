@@ -1,4 +1,6 @@
 #include "GyroHandler.hpp"
+#include "BorderDetectionHandler.hpp"
+#include "MotorHandler.hpp"
 
 
 void GyroHandler::calibrate()
@@ -12,11 +14,44 @@ void GyroHandler::calibrate()
     reset_angle();
 }
 
-void GyroHandler::turn()
+void GyroHandler::calibrate_turn(BorderDetectionHandler &border_detector,
+                                 bool reverse, bool centre)
+{
+    if (centre) {
+        while (static_cast<int32_t>(turn_angle_) < 0) {
+            border_detector.calibrate();
+            turn_adjust();
+        }
+    } else if (reverse) {
+        while (static_cast<int32_t>(turn_angle_) > -angle_90_degrees_) {
+            border_detector.calibrate();
+            turn_adjust();
+        }
+    } else {
+        while (static_cast<int32_t>(turn_angle_) < angle_90_degrees_) {
+            border_detector.calibrate();
+            turn_adjust();
+        }
+    }
+}
+
+void GyroHandler::turn_right()
+{
+    while (static_cast<int32_t>(turn_angle_) > -angle_90_degrees_) {
+        turn_adjust();
+    }
+}
+
+void GyroHandler::turn_left()
 {
     while (static_cast<int32_t>(turn_angle_) < angle_90_degrees_) {
         turn_adjust();
     }
+}
+
+void GyroHandler::recenter()
+{
+    while (turn_angle_ < 0) { turn_adjust(); }
 }
 
 void GyroHandler::reset_angle()

@@ -11,7 +11,8 @@ public:
     explicit BorderDetectionHandler(uint16_t border_thresh) noexcept
         : border_thresh_(border_thresh)
     {
-        initThreeSensors();
+        initFiveSensors();
+        calibrate();
     }
 
     explicit BorderDetectionHandler() noexcept : BorderDetectionHandler(450){};

@@ -33,23 +33,12 @@ void display_on_lcd(const char *line1, const char *line2)
 void calibrate_sensors()
 {
     ledYellow(true);
-    for (uint16_t i{ 0 }; i < 120; i++) {
-        MotorHandler::Direction direction;
-        if (i > 30 && i <= 90) {
-            direction = MotorHandler::Left;
-        } else {
-            direction = MotorHandler::Right;
-        }
-        motor.do_move(direction, 0);
-        border_detector.calibrate();
-    }
-    MotorHandler::stop();
+    motor.calibrate_turn(border_detector);
     ledYellow(false);
 }
 
 void intro()
 {
-
     buzzer.play("!L16 V8 cdefgab>cbagfedc");
     display.clear();
     display_on_lcd("Press A", "to start");

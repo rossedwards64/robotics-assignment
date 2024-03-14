@@ -5,6 +5,7 @@
 
 #include "GyroHandler.hpp"
 #include "Stack.hpp"
+#include "BorderDetectionHandler.hpp"
 
 
 class MotorHandler : Zumo32U4Motors
@@ -17,14 +18,16 @@ public:
         Reverse,
     };
 
-    explicit MotorHandler() noexcept : gyro(), moves(), max_speed_(100) {}
-
     explicit MotorHandler(int16_t max_speed) noexcept
-        : gyro(), max_speed_(max_speed)
+        : gyro(), moves(), max_speed_(max_speed)
     {
     }
 
+    explicit MotorHandler() noexcept : MotorHandler(100) {}
+
     static void stop() { setSpeeds(0, 0); }
+
+    void calibrate_turn(BorderDetectionHandler &border_detector);
 
     void do_move(Direction direction);
     void do_move(Direction direction, uint16_t duration);
