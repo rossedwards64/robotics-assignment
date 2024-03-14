@@ -1,11 +1,11 @@
 #include "MotorHandler.hpp"
 
-void MotorHandler::do_move() { do_move(500); }
+void MotorHandler::do_move(Direction direction) { do_move(direction, 500); }
 
-void MotorHandler::do_move(uint16_t duration)
+void MotorHandler::do_move(Direction direction, uint16_t duration)
 {
-    moves.push(direction_);
-    switch (direction_) {
+    moves.push(direction);
+    switch (direction) {
     case Left:
         setSpeeds(-max_speed_, max_speed_);
         gyro.turn();
@@ -23,7 +23,8 @@ void MotorHandler::do_move(uint16_t duration)
 
 void MotorHandler::go_back()
 {
-    for (direction_ = moves.pop(); !moves.empty(); direction_ = moves.pop()) {
-        do_move();
+    for (Direction direction = moves.pop(); !moves.empty();
+         direction = moves.pop()) {
+        do_move(direction);
     }
 }

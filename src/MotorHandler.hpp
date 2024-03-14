@@ -21,30 +21,21 @@ public:
         Reverse,
     };
 
-    explicit MotorHandler() noexcept
-        : gyro(), moves(), direction_(Direction::Straight), max_speed_(100)
-    {
-    }
+    explicit MotorHandler() noexcept : gyro(), moves(), max_speed_(100) {}
 
-    explicit MotorHandler(Direction direction) noexcept
-        : MotorHandler(direction, 100)
-    {
-    }
-
-    explicit MotorHandler(Direction direction, int16_t max_speed) noexcept
-        : gyro(), direction_(direction), max_speed_(max_speed)
+    explicit MotorHandler(int16_t max_speed) noexcept
+        : gyro(), max_speed_(max_speed)
     {
     }
 
     static void stop() { setSpeeds(0, 0); }
 
-    void do_move();
-    void do_move(uint16_t duration);
+    void do_move(Direction direction);
+    void do_move(Direction direction, uint16_t duration);
 
     void go_back();
     void retrace_steps();
 
-    void set_direction(Direction direction) { this->direction_ = direction; }
     void set_speed(int16_t speed) { this->max_speed_ = speed; }
 
 private:
@@ -55,7 +46,6 @@ private:
 
     GyroHandler gyro;
     Stack<Direction, max_moves_> moves;
-    Direction direction_;
     int16_t max_speed_;
 };
 

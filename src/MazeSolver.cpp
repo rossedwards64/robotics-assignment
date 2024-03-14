@@ -1,19 +1,18 @@
 #include <Wire.h>
 
+#include "BorderDetectionHandler.hpp"
 #include "MotorHandler.hpp"
-
-const uint16_t border_thresh{ 450 };
-const uint16_t prox_thresh{ 4 };
+#include "ObjectDetectionHandler.hpp"
 
 Zumo32U4LCD display;
 Zumo32U4ButtonA button_a;
 
 MotorHandler motor;
 
-Zumo32U4ProximitySensors prox_sensors;
+ObjectDetectionHandler object_detector;
 
-Zumo32U4LineSensors line_sensors;
-uint16_t line_sensor_vals[3]{ 0, 0, 0 };
+BorderDetectionHandler border_detector;
+
 const int16_t last_error{ 0 };
 
 Zumo32U4Buzzer buzzer;
@@ -31,8 +30,6 @@ void calibrate_sensors()
 {
     ledYellow(true);
     Wire.begin();
-    prox_sensors.initThreeSensors();
-    line_sensors.initThreeSensors();
     for (uint16_t i{ 0 }; i < 120; i++) {
         MotorHandler::Direction direction;
         if (i > 30 && i <= 90) {
@@ -40,64 +37,52 @@ void calibrate_sensors()
         } else {
             direction = MotorHandler::Right;
         }
-        MotorHandler(direction, 200).do_move(0);
-
-        line_sensors.calibrate();
+        motor.do_move(direction, 0);
+        border_detector.calibrate();
     }
     MotorHandler::stop();
     ledYellow(false);
 }
 
-void introduction()
+void intro()
 {
 
     buzzer.play("!L16 V8 cdefgab>cbagfedc");
     display.clear();
     display_on_lcd("Press A", "to start");
     button_a.waitForButton();
-    display_on_lcd("This is", "Robotics");
+    display_on_lcd("Delivery", "Service...");
     delay(500);
     calibrate_sensors();
     delay(1000);
     display_on_lcd("Go!!", "");
 }
 
-void detect_border()
+void avoid_border()
 {
-    line_sensors.read(static_cast<uint16_t *>(line_sensor_vals));
+    border_detector.read_sensors();
 
-    uint16_t left{ line_sensor_vals[0] };
-    uint16_t middle{ line_sensor_vals[1] };
-    uint16_t right{ line_sensor_vals[2] };
-
+    // TODO: try left hand on the wall strategy for determining turn direction
     MotorHandler::Direction direction;
-    if (middle >= border_thresh) {
+    if (border_detector.border_detected_middle()) {
         direction = MotorHandler::Direction::Left;
     } else {
         direction = MotorHandler::Direction::Straight;
     }
-
-    MotorHandler(direction).do_move(300);
+    motor.do_move(direction, 300);
 }
 
-void detect_object()
-{
-    prox_sensors.read();
-    uint8_t left_value{ prox_sensors.countsFrontWithLeftLeds() };
-    uint8_t right_value{ prox_sensors.countsFrontWithRightLeds() };
-
-    bool object_seen{ left_value >= prox_thresh || right_value >= prox_thresh };
-}
+void avoid_object() { object_detector.object_seen(); }
 
 
 void setup()
 {
     randomSeed(analogRead(0));
-    introduction();
+    intro();
 }
 
 void loop()
 {
-    detect_border();
-    // detect_object();
+    avoid_border();
+    avoid_object();
 }
