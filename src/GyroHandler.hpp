@@ -1,28 +1,38 @@
 #ifndef GYRO_HANDLER_HPP_
 #define GYRO_HANDLER_HPP_
 
-#include <stdint.h>
 #include <Arduino.h>
-#include "Zumo32U4IMU.h"
+#include <Wire.h>
+#include <stdint.h>
+#include <Zumo32U4IMU.h>
 
+
+/* initialisation routine, turn values and turn adjustment routine obtained from
+ * the Zumo MazeSolver example.
+ */
 class GyroHandler : public Zumo32U4IMU
 {
 public:
     GyroHandler()
     {
+        Wire.begin();
         init();
         enableDefault();
         configureForTurnSensing();
     };
 
-    // Values obtained from Zumo MazeSolver example.
-    static const int32_t half_quarter_turn_{ 0x20000000 };
-    static constexpr int32_t quarter_turn_{ half_quarter_turn_ * 2 };
-    static constexpr int32_t degree_turn_{ (half_quarter_turn_ + 22) / 45 };
-    static constexpr int64_t degrees_formula_{ 14680064 / 17578125 };
+    static const int32_t angle_45_degrees_{ 0x20000000 };
+    static constexpr int32_t angle_90_degrees_{ angle_45_degrees_ * 2 };
+    static constexpr int32_t angle_1_degree_{ (angle_45_degrees_ + 22) / 45 };
 
+    void calibrate();
     void turn();
     void reset_angle();
+
+    static int64_t gyro_digits_to_degrees(uint32_t gyro_digits)
+    {
+        return static_cast<int64_t>(gyro_digits) * 14680064 / 17578125;
+    }
 
     static int32_t convert_angle(uint32_t angle)
     {
@@ -31,6 +41,7 @@ public:
     }
 
 private:
+    void blocking_read();
     void turn_adjust();
 
     uint32_t turn_angle_{ 0 };

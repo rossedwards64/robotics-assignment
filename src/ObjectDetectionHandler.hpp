@@ -2,8 +2,8 @@
 #define OBJECT_DETECTION_HANDLER_HPP_
 
 #include <stdint.h>
+#include <Zumo32U4ProximitySensors.h>
 
-#include "Zumo32U4ProximitySensors.h"
 
 class ObjectDetectionHandler : public Zumo32U4ProximitySensors
 {

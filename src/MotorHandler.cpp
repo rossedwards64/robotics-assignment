@@ -1,5 +1,6 @@
 #include "MotorHandler.hpp"
 
+
 void MotorHandler::do_move(Direction direction) { do_move(direction, 500); }
 
 void MotorHandler::do_move(Direction direction, uint16_t duration)

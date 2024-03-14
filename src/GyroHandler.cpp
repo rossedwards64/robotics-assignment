@@ -1,8 +1,22 @@
 #include "GyroHandler.hpp"
 
+
+void GyroHandler::calibrate()
+{
+    int32_t total{ 0 };
+    for (uint16_t i{ 0 }; i < 1024; i++) {
+        blocking_read();
+        total = g.z;
+    }
+    gyro_offset_ = total / 1024;
+    reset_angle();
+}
+
 void GyroHandler::turn()
 {
-    while (static_cast<int32_t>(turn_angle_) < quarter_turn_) { turn_adjust(); }
+    while (static_cast<int32_t>(turn_angle_) < angle_90_degrees_) {
+        turn_adjust();
+    }
 }
 
 void GyroHandler::reset_angle()
@@ -11,14 +25,19 @@ void GyroHandler::reset_angle()
     turn_angle_ = 0;
 }
 
+void GyroHandler::blocking_read()
+{
+    while (!gyroDataReady()) {}
+    readGyro();
+}
+
 void GyroHandler::turn_adjust()
 {
-    // obtained from Zumo MazeSolver example
-    readGyro();
+    blocking_read();
     turn_rate_ = g.z - gyro_offset_;
     uint32_t now{ micros() };
     uint32_t delta{ now - gyro_last_update_ };
     gyro_last_update_ = now;
     uint32_t d{ static_cast<int32_t>(turn_rate_) * delta };
-    turn_angle_ += static_cast<int64_t>(d) * degrees_formula_;
+    turn_angle_ += gyro_digits_to_degrees(d);
 }

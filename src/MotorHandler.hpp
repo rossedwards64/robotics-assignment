@@ -1,15 +1,11 @@
-#ifndef MOVE_HPP_
-#define MOVE_HPP_
+#ifndef MOTOR_HANDLER_HPP_
+#define MOTOR_HANDLER_HPP_
+
+#include <Zumo32U4Motors.h>
 
 #include "GyroHandler.hpp"
 #include "Stack.hpp"
-#include "Zumo32U4Motors.h"
-#include <Arduino.h>
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++11-narrowing"
-#include <Zumo32U4.h>
-#pragma clang diagnostic pop
-#include <stdint.h>
+
 
 class MotorHandler : Zumo32U4Motors
 {

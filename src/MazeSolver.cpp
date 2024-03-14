@@ -1,8 +1,12 @@
-#include <Wire.h>
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++11-narrowing"
+#include <Zumo32U4.h>
+#pragma clang diagnostic pop
 
-#include "BorderDetectionHandler.hpp"
 #include "MotorHandler.hpp"
+#include "BorderDetectionHandler.hpp"
 #include "ObjectDetectionHandler.hpp"
+
 
 Zumo32U4LCD display;
 Zumo32U4ButtonA button_a;
@@ -29,7 +33,6 @@ void display_on_lcd(const char *line1, const char *line2)
 void calibrate_sensors()
 {
     ledYellow(true);
-    Wire.begin();
     for (uint16_t i{ 0 }; i < 120; i++) {
         MotorHandler::Direction direction;
         if (i > 30 && i <= 90) {
@@ -65,7 +68,9 @@ void avoid_border()
     // TODO: try left hand on the wall strategy for determining turn direction
     MotorHandler::Direction direction;
     if (border_detector.border_detected_middle()) {
+        ledGreen(true);
         direction = MotorHandler::Direction::Left;
+        ledGreen(false);
     } else {
         direction = MotorHandler::Direction::Straight;
     }

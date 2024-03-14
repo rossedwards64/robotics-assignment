@@ -1,5 +1,6 @@
 #include "BorderDetectionHandler.hpp"
 
+
 uint16_t BorderDetectionHandler::border_thresh() const
 {
     return border_thresh_;

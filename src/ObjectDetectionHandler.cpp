@@ -1,5 +1,6 @@
 #include "ObjectDetectionHandler.hpp"
 
+
 bool ObjectDetectionHandler::object_seen() const
 {
     return countsFrontWithLeftLeds() >= prox_thresh_

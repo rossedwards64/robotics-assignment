@@ -4,6 +4,7 @@
 #include <stddef.h>
 #include <stdlib.h>
 
+
 template<typename T, size_t N>
 class Stack
 {
