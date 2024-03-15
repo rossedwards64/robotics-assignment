@@ -13,17 +13,18 @@
 class GyroHandler : public Zumo32U4IMU
 {
 public:
-    GyroHandler()
-    {
-        Wire.begin();
-        init();
-        enableDefault();
-        configureForTurnSensing();
-    };
+    GyroHandler() = default;
 
     static const int32_t angle_45_degrees_{ 0x20000000 };
     static constexpr int32_t angle_90_degrees_{ angle_45_degrees_ * 2 };
     static constexpr int32_t angle_1_degree_{ (angle_45_degrees_ + 22) / 45 };
+
+    void initialise()
+    {
+        init();
+        enableDefault();
+        configureForTurnSensing();
+    };
 
     void calibrate();
     void calibrate_turn(BorderDetectionHandler &border_detector,

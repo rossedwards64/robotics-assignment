@@ -11,8 +11,6 @@ public:
     explicit BorderDetectionHandler(uint16_t border_thresh) noexcept
         : border_thresh_(border_thresh)
     {
-        initFiveSensors();
-        calibrate();
     }
 
     explicit BorderDetectionHandler() noexcept : BorderDetectionHandler(450){};
@@ -23,6 +21,8 @@ public:
     BorderDetectionHandler &operator=(BorderDetectionHandler &&) = delete;
 
     virtual ~BorderDetectionHandler() = default;
+
+    void initialise();
 
     uint16_t border_thresh() const;
 

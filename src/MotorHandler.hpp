@@ -27,6 +27,8 @@ public:
 
     static void stop() { setSpeeds(0, 0); }
 
+    void initialise() { gyro.initialise(); }
+
     void calibrate_turn(BorderDetectionHandler &border_detector);
 
     void do_move(Direction direction);

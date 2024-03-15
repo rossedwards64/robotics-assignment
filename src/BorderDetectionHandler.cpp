@@ -1,5 +1,10 @@
 #include "BorderDetectionHandler.hpp"
 
+void BorderDetectionHandler::initialise()
+{
+    initFiveSensors();
+    calibrate();
+}
 
 uint16_t BorderDetectionHandler::border_thresh() const
 {

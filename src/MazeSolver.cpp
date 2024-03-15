@@ -4,7 +4,6 @@
 #pragma clang diagnostic pop
 
 #include "MotorHandler.hpp"
-#include "BorderDetectionHandler.hpp"
 #include "ObjectDetectionHandler.hpp"
 
 
@@ -33,6 +32,8 @@ void display_on_lcd(const char *line1, const char *line2)
 void calibrate_sensors()
 {
     ledYellow(true);
+    border_detector.initialise();
+    motor.initialise();
     motor.calibrate_turn(border_detector);
     ledYellow(false);
 }
@@ -71,6 +72,7 @@ void avoid_object() { object_detector.object_seen(); }
 
 void setup()
 {
+    Wire.begin();
     randomSeed(analogRead(0));
     intro();
 }
