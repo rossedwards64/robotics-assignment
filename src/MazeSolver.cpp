@@ -8,17 +8,14 @@
 
 
 Zumo32U4LCD display;
+Zumo32U4Buzzer buzzer;
 Zumo32U4ButtonA button_a;
 
 MotorHandler motor;
-
 ObjectDetectionHandler object_detector;
-
 BorderDetectionHandler border_detector;
 
-const int16_t last_error{ 0 };
-
-Zumo32U4Buzzer buzzer;
+uint8_t deliveries{ 0 };
 
 void display_on_lcd(const char *line1, const char *line2)
 {
@@ -32,8 +29,9 @@ void display_on_lcd(const char *line1, const char *line2)
 void calibrate_sensors()
 {
     ledYellow(true);
-    border_detector.initialise();
-    motor.initialise();
+    // motor.initialise();
+    border_detector.initThreeSensors();
+    object_detector.initFrontSensor();
     motor.calibrate_turn(border_detector);
     ledYellow(false);
 }
@@ -57,18 +55,31 @@ void avoid_border()
 
     // TODO: try left hand on the wall strategy for determining turn direction
     MotorHandler::Direction direction;
-    if (border_detector.border_detected_middle()) {
-        ledGreen(true);
-        direction = MotorHandler::Direction::Left;
-        ledGreen(false);
+    if (border_detector.border_detected_left()) {
+        direction = MotorHandler::Right;
+    } else if (border_detector.border_detected_right()) {
+        direction = MotorHandler::Left;
+    } else if (border_detector.border_detected_middle()) {
+        direction = MotorHandler::Rotate;
     } else {
-        direction = MotorHandler::Direction::Straight;
+        direction = MotorHandler::Straight;
     }
-    motor.do_move(direction, 300);
+    motor.do_move(direction);
 }
 
-void avoid_object() { object_detector.object_seen(); }
-
+void attempt_delivery()
+{
+    display_on_lcd(String(object_detector.left()).c_str(),
+                   String(object_detector.right()).c_str());
+    if (object_detector.object_seen()) {
+        MotorHandler::stop();
+        deliveries++;
+        display_on_lcd("Completed", "Delivery!!");
+        delay(1000);
+        display_on_lcd("Onto the", "next!");
+        motor.go_back();
+    }
+}
 
 void setup()
 {
@@ -80,5 +91,5 @@ void setup()
 void loop()
 {
     avoid_border();
-    avoid_object();
+    attempt_delivery();
 }

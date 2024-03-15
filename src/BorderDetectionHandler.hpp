@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <Zumo32U4LineSensors.h>
+#include <Zumo32U4LCD.h>
 
 
 class BorderDetectionHandler : public Zumo32U4LineSensors
@@ -13,7 +14,7 @@ public:
     {
     }
 
-    explicit BorderDetectionHandler() noexcept : BorderDetectionHandler(450){};
+    explicit BorderDetectionHandler() noexcept : BorderDetectionHandler(500){};
 
     BorderDetectionHandler(const BorderDetectionHandler &) = delete;
     BorderDetectionHandler(BorderDetectionHandler &&) = delete;
@@ -21,8 +22,6 @@ public:
     BorderDetectionHandler &operator=(BorderDetectionHandler &&) = delete;
 
     virtual ~BorderDetectionHandler() = default;
-
-    void initialise();
 
     uint16_t border_thresh() const;
 
@@ -33,14 +32,16 @@ public:
     bool border_detected_right() const;
 
 private:
+    uint16_t left_sensor() const;
+    uint16_t middle_sensor() const;
+    uint16_t right_sensor() const;
+
     uint16_t border_thresh_;
     uint16_t sensor_vals_[3]{};
 
     bool border_detected(uint16_t sensor_val) const;
 
-    uint16_t left_sensor() const;
-    uint16_t middle_sensor() const;
-    uint16_t right_sensor() const;
+    Zumo32U4LCD display{};
 };
 
 #endif

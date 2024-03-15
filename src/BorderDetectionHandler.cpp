@@ -1,11 +1,5 @@
 #include "BorderDetectionHandler.hpp"
 
-void BorderDetectionHandler::initialise()
-{
-    initFiveSensors();
-    calibrate();
-}
-
 uint16_t BorderDetectionHandler::border_thresh() const
 {
     return border_thresh_;
@@ -13,7 +7,7 @@ uint16_t BorderDetectionHandler::border_thresh() const
 
 void BorderDetectionHandler::read_sensors()
 {
-    read(static_cast<uint16_t *>(sensor_vals_));
+    readCalibrated(static_cast<uint16_t *>(sensor_vals_));
 }
 
 bool BorderDetectionHandler::border_detected_left() const

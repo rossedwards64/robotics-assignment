@@ -1,8 +1,14 @@
 #include "ObjectDetectionHandler.hpp"
 
 
+void ObjectDetectionHandler::read_sensors()
+{
+    read();
+    left_ = countsFrontWithLeftLeds();
+    right_ = countsFrontWithRightLeds();
+}
+
 bool ObjectDetectionHandler::object_seen() const
 {
-    return countsFrontWithLeftLeds() >= prox_thresh_
-           || countsFrontWithRightLeds() >= prox_thresh_;
+    return left_ >= prox_thresh_ || right_ >= prox_thresh_;
 }

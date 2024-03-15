@@ -1,11 +1,13 @@
 #ifndef GYRO_HANDLER_HPP_
 #define GYRO_HANDLER_HPP_
 
-#include "BorderDetectionHandler.hpp"
 #include <Arduino.h>
 #include <Wire.h>
-#include <stdint.h>
 #include <Zumo32U4IMU.h>
+#include <Zumo32U4LCD.h>
+#include <stdint.h>
+
+#include "BorderDetectionHandler.hpp"
 
 /* initialisation routine, turn values and turn adjustment routine obtained from
  * the Zumo MazeSolver example.
@@ -53,6 +55,8 @@ private:
     int16_t turn_rate_{ 0 };
     int16_t gyro_offset_{ 0 };
     uint16_t gyro_last_update_{ 0 };
+
+    Zumo32U4LCD lcd{};
 };
 
 #endif
