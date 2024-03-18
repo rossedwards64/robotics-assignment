@@ -19,6 +19,9 @@ functions.
 5. Displays a message to mark the start of the scenario, then executes
 the scenario.
 
+6. Once the scenario has terminated, asks the user to select another
+scenario.
+
 ## Scenario Behaviour
 
 ### Scenario 1
