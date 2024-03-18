@@ -1,7 +1,7 @@
 #include "MotorHandler.hpp"
 
 
-void MotorHandler::calibrate_turn(BorderDetectionHandler &border_detector)
+void MotorHandler::calibrate(BorderDetectionHandler &border_detector)
 {
     for (uint16_t i{ 0 }; i < 120; i++) {
         Direction direction;
@@ -11,28 +11,27 @@ void MotorHandler::calibrate_turn(BorderDetectionHandler &border_detector)
             direction = Direction::Right;
         }
 
-        do_move(direction, 200, true);
+        move(direction, true);
         border_detector.calibrate();
     }
     stop();
 }
 
-void MotorHandler::do_move(Direction direction)
+void MotorHandler::move(Direction direction) { move(direction, move_time_); }
+
+void MotorHandler::move(Direction direction, bool override_turn)
 {
-    do_move(direction, move_time_);
+    move(direction, 0, override_turn);
 }
 
-// to go 90 degrees, set to 90 speed and turn for 1000 milliseconds.
-void MotorHandler::do_move(Direction direction,
-                           uint16_t duration,
-                           bool override_turn)
+void MotorHandler::move(Direction direction,
+                        uint16_t duration,
+                        bool override_turn)
 {
-    if (!override_turn) {
-        // display.clear();
-        moves.push(direction);
-        // display.print("add");
-    }
+    if (!override_turn) { moves.push(direction); }
 
+    // use a function pointer to choose which colour LED to flash.
+    // this is so we don't have to call led*(false) at the end of every case.
     void (*led)(bool);
 
     switch (direction) {
@@ -40,41 +39,39 @@ void MotorHandler::do_move(Direction direction,
         led = ledGreen;
         led(true);
         if (!override_turn) {
-            setSpeeds(-turn_speed_, turn_speed_);
-            delay(turn_time_);
+            do_move(-turn_speed_, turn_speed_);
         } else {
-            setSpeeds(200, -200);
+            do_move(-calib_speed_, calib_speed_, duration);
         }
-        // gyro.turn_left();
         break;
     case Right:
         led = ledGreen;
         led(true);
         if (!override_turn) {
-            setSpeeds(turn_speed_, -turn_speed_);
-            delay(turn_time_);
+            do_move(turn_speed_, -turn_speed_);
         } else {
-            setSpeeds(-200, 200);
+            do_move(calib_speed_, -calib_speed_, duration);
         }
-        // gyro.turn_right();
         break;
     case Straight:
         led = ledYellow;
         led(true);
-        setSpeeds(max_speed_, max_speed_);
-        delay(duration);
+        do_move(max_speed_, max_speed_, duration);
         break;
     case Reverse:
         led = ledRed;
         led(true);
-        setSpeeds(-max_speed_, -max_speed_);
-        delay(duration);
+        do_move(-max_speed_, -max_speed_, duration);
         break;
-    case Rotate:
+    case FlipLeft:
         led = ledYellow;
         led(true);
-        setSpeeds(-turn_speed_, turn_speed_);
-        delay(static_cast<uint32_t>(turn_time_) * 2);
+        do_move(-turn_speed_, turn_speed_, flip_time_);
+        break;
+    case FlipRight:
+        led = ledYellow;
+        led(true);
+        do_move(turn_speed_, -turn_speed_, flip_time_);
         break;
     }
     led(false);
@@ -88,16 +85,27 @@ MotorHandler::Direction MotorHandler::invert(Direction direction)
     case Right: inverted = Left; break;
     case Straight: inverted = Reverse; break;
     case Reverse: inverted = Straight; break;
-    case Rotate:
+    case FlipLeft:// no-op
     default: break;
     }
     return inverted;
+}
+
+void MotorHandler::do_move(int16_t speed_l, int16_t speed_r)
+{
+    do_move(speed_l, speed_r, turn_time_);
+}
+
+void MotorHandler::do_move(int16_t speed_l, int16_t speed_r, uint16_t duration)
+{
+    setSpeeds(speed_l, speed_r);
+    delay(duration);
 }
 
 void MotorHandler::go_back()
 {
     for (Direction direction = moves.pop(); !moves.empty();
          direction = moves.pop()) {
-        do_move(invert(direction));
+        move(invert(direction));
     }
 }

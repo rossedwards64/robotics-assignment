@@ -1,11 +1,14 @@
 #ifndef GYRO_HANDLER_HPP_
 #define GYRO_HANDLER_HPP_
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wc++11-narrowing"
 #include <Arduino.h>
 #include <Wire.h>
 #include <Zumo32U4IMU.h>
 #include <Zumo32U4LCD.h>
 #include <stdint.h>
+#pragma clang diagnostic pop
 
 #include "BorderDetectionHandler.hpp"
 

@@ -1,33 +1,30 @@
 #include "BorderDetectionHandler.hpp"
 
-uint16_t BorderDetectionHandler::border_thresh() const
-{
-    return border_thresh_;
-}
 
 void BorderDetectionHandler::read_sensors()
 {
-    readCalibrated(static_cast<uint16_t *>(sensor_vals_));
+    read(static_cast<uint16_t *>(sensor_vals_));
 }
 
 bool BorderDetectionHandler::border_detected_left() const
 {
-    return border_detected(left_sensor());
+    return left_sensor() >= side_border_thresh_;
 }
 
 bool BorderDetectionHandler::border_detected_middle() const
 {
-    return border_detected(middle_sensor());
+    return middle_sensor() >= mid_border_thresh_;
 }
 
 bool BorderDetectionHandler::border_detected_right() const
 {
-    return border_detected(right_sensor());
+    return right_sensor() >= side_border_thresh_;
 }
 
-bool BorderDetectionHandler::border_detected(uint16_t sensor_val) const
+bool BorderDetectionHandler::border_detected_all() const
 {
-    return sensor_val >= border_thresh_;
+    return border_detected_left() && border_detected_middle()
+           && border_detected_right();
 }
 
 uint16_t BorderDetectionHandler::left_sensor() const { return sensor_vals_[0]; }
