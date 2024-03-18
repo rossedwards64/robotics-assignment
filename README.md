@@ -1,6 +1,7 @@
 # Maze Solver
 
 ## Steps
+
 The program works as follows:
 
 1. Waits for user to press the 'A' button.
@@ -25,6 +26,7 @@ scenario.
 ## Scenario Behaviour
 
 ### Scenario 1
+
 Scenario 1 behaves as follows:
 1. Takes a reading from the line sensors.
 2. Chooses a direction to move in depending on if and where a line is
@@ -38,12 +40,45 @@ the map.
 terminates.
 		
 ### Scenario 2
+
 Scenario 2 behaves as follows:
 1. Same as [Scenario 1](#scenario-1), however the scenario terminates
 once all five deliveries have been made.
 
 ### Scenario 3
+
 Scenario 3 behaves as follows:
 1. Currently, nothing.
 
+## How to Build
 
+### Arduino IDE
+
+Open `MazeSolver/MazeSolver.ino` in Arduino IDE, and click `Build` or
+`Upload`. 
+
+### Arduino CLI
+
+In a terminal, navigate to the root directory of this project, and run
+```
+	# use `compile` instead of `upload` to build
+	arduino-cli upload --fqbn arduino:avr:leonardo MazeSolver.ino
+```
+or
+```
+	# use `--verify` instead of `--upload` to build
+	arduino --upload --board arduino:avr:leonardo MazeSolver.ino
+```
+
+### PlatformIO
+
+In a terminal, navigate to the root directory of this project, and run
+```
+	# to compile
+	pio run
+``` 
+or
+```
+	# to upload to the board
+	pio run --target upload
+```
