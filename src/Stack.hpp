@@ -14,11 +14,9 @@ public:
     void push(const T &datum)
     {
         if (!full()) {
-            if (!stack_ptr_) {
-                stack_ptr_ = data_;
-            } else {
-                stack_ptr_++;
-            }
+            // initialise the stack pointer if it hasn't been already
+            // if it has, move the pointer to the top
+            !stack_ptr_ ? stack_ptr_ = data_ : stack_ptr_++;
             *stack_ptr_ = datum;
             size_++;
         }
@@ -27,7 +25,7 @@ public:
     T pop()
     {
         T datum = *stack_ptr_;
-        *stack_ptr_ = T{};
+        *stack_ptr_ = T{};// clear the top value before moving the stack pointer
         stack_ptr_--;
         size_--;
         return datum;
@@ -40,7 +38,7 @@ public:
     size_t size() const { return size_; }
 
 private:
-    bool full() const { return size_ < (N - 1); }
+    bool full() const { return size_ > (N - 1); }
 
     T data_[N]{};
     T *stack_ptr_{ nullptr };

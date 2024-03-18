@@ -73,5 +73,4 @@ void GyroHandler::turn_adjust()
     gyro_last_update_ = now;
     uint32_t d{ static_cast<int32_t>(turn_rate_) * delta };
     turn_angle_ += gyro_digits_to_degrees(d);
-    lcd.print("a: " + String(turn_angle_));
 }

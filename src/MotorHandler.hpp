@@ -1,12 +1,9 @@
 #ifndef MOTOR_HANDLER_HPP_
 #define MOTOR_HANDLER_HPP_
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++11-narrowing"
 #include <Zumo32U4.h>
 #include <Zumo32U4Motors.h>
 #include <Zumo32U4LCD.h>
-#pragma clang diagnostic pop
 
 #include "GyroHandler.hpp"
 #include "Stack.hpp"
@@ -36,8 +33,11 @@ public:
 
     void initialise() { gyro.initialise(); }
 
+    // calibration routine obtained from the LineFollower example.
     void calibrate(BorderDetectionHandler &border_detector);
 
+    // override_turn is a flag to allow the calibration routine to run at a
+    // higher speed.
     void move(Direction direction);
     void move(Direction direction, bool override_turn);
     void move(Direction direction, uint16_t duration,
@@ -66,8 +66,6 @@ private:
     Stack<Direction, max_moves_> moves;
     int16_t max_speed_;
     uint32_t last_error{ 0 };
-
-    Zumo32U4LCD display{};
 };
 
 #endif

@@ -31,10 +31,10 @@ private:
     uint8_t front_prox_thresh_;
     uint8_t periph_prox_thresh_;
 
-    uint8_t periph_left_{};
-    uint8_t front_left_{};
-    uint8_t front_right_{};
-    uint8_t periph_right_{};
+    uint8_t periph_left_{ 0 };
+    uint8_t front_left_{ 0 };
+    uint8_t front_right_{ 0 };
+    uint8_t periph_right_{ 0 };
 };
 
 #endif

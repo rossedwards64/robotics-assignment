@@ -1,12 +1,9 @@
 #ifndef LINE_HANDLER_HPP_
 #define LINE_HANDLER_HPP_
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++11-narrowing"
 #include <stdint.h>
 #include <Zumo32U4LineSensors.h>
 #include <Zumo32U4LCD.h>
-#pragma clang diagnostic pop
 
 
 class BorderDetectionHandler : public Zumo32U4LineSensors
@@ -44,8 +41,6 @@ private:
     uint16_t mid_border_thresh_;
     uint16_t side_border_thresh_;
     uint16_t sensor_vals_[3]{};
-
-    Zumo32U4LCD display{};
 };
 
 #endif

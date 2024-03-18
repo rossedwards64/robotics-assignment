@@ -1,7 +1,4 @@
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wc++11-narrowing"
 #include <Zumo32U4.h>
-#pragma clang diagnostic pop
 
 #include "MotorHandler.hpp"
 #include "ObjectDetectionHandler.hpp"
@@ -110,10 +107,6 @@ void avoid_border()
 {
     border_detector.read_sensors();
 
-    display_on_lcd(String(border_detector.middle_sensor()).c_str(), "");
-
-    // TODO: try left hand on the wall strategy for determining turn
-    // direction
     MotorHandler::Direction direction;
     if (border_detector.border_detected_left()) {
         direction = MotorHandler::Right;
@@ -161,7 +154,6 @@ bool attempt_delivery()
 void setup()
 {
     Wire.begin();
-    randomSeed(static_cast<uint16_t>(millis()));
     calibration();
 }
 

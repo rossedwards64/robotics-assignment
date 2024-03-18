@@ -85,8 +85,8 @@ MotorHandler::Direction MotorHandler::invert(Direction direction)
     case Right: inverted = Left; break;
     case Straight: inverted = Reverse; break;
     case Reverse: inverted = Straight; break;
-    case FlipLeft:// no-op
-    default: break;
+    case FlipLeft: inverted = FlipLeft;
+    default: inverted = direction; break;
     }
     return inverted;
 }
