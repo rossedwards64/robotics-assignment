@@ -55,30 +55,30 @@ Scenario 3 behaves as follows:
 ### Arduino IDE
 
 Open `MazeSolver/MazeSolver.ino` in Arduino IDE, and click `Build` or
-`Upload`. 
+`Upload`, 
+or
+```sh
+# use `--verify` instead of `--upload` to build
+arduino --upload --board 'arduino:avr:leonardo' MazeSolver.ino
+```
 
 ### Arduino CLI
 
 In a terminal, navigate to the root directory of this project, and run
-```
-	# use `compile` instead of `upload` to build
-	arduino-cli upload --fqbn arduino:avr:leonardo MazeSolver.ino
-```
-or
-```
-	# use `--verify` instead of `--upload` to build
-	arduino --upload --board arduino:avr:leonardo MazeSolver.ino
+```sh
+# use `compile` instead of `upload` to build
+arduino-cli upload --fqbn 'arduino:avr:leonardo' MazeSolver.ino
 ```
 
 ### PlatformIO
 
 In a terminal, navigate to the root directory of this project, and run
-```
-	# to compile
-	pio run
+```sh
+# to compile
+pio run
 ``` 
 or
-```
-	# to upload to the board
-	pio run --target upload
+```sh
+# to upload to the board
+pio run --target upload
 ```
